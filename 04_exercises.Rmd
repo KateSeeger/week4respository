@@ -12,7 +12,7 @@ output:
 
 
 ```{r setup, include=FALSE}
-#knitr::opts_chunk$set(echo = TRUE, error=TRUE, message=FALSE, warning=FALSE)
+knitr::opts_chunk$set(echo = TRUE, error=TRUE, message=FALSE, warning=FALSE)
 ```
 
 ```{r libraries}
@@ -116,7 +116,7 @@ ggmap(world) + # creates the map "background"
     y= ""
   )
 ```
-
+I can tell that in the US the Starbucks are mainly owned by company or licensed.In Europe, Starbucks are a mix of company owned, joint venue, and licensed. However, in very specific parts of East Asia, they have distinct clustering of ownership types (i.e. in Japan they only have joint venue ownership).
 
   2. Construct a new map of Starbucks locations in the Twin Cities metro area (approximately the 5 county metro area).
 
@@ -148,7 +148,7 @@ The zoom number adjusts how large the map image is, and a smaller number will in
 
   4. Try a couple different map types (see `get_stamenmap()` in help and look at `maptype`). Include a map with one of the other map types.
   
-terrain-background, but I tried watercolor and it was aesthetically pleasing but hard to interpret.
+
 ```{r}
 twincities <- get_stamenmap(bbox = c(left = -94,
                                      bottom = 44.52,
@@ -157,7 +157,7 @@ twincities <- get_stamenmap(bbox = c(left = -94,
                             maptype = "watercolor",
                             zoom = 9)
 
-ggmap(twincities) + # creates the map "background"
+ggmap(twincities) + 
   geom_point(data = Starbucks, 
              aes(x = Longitude, y = Latitude), 
              alpha = .3, 
@@ -282,14 +282,14 @@ Based on this chloropleth map, I can tell that there is a higher amount of Starb
 
 ```{r}
 favorite_plc_kate <- tibble(
-  place = c("Home", "Macalester College", "Fasika", 
-            "Wheeler", "Gram", "CheeseShop",
-            "CafeYumm", "NeighborhoodCafe", "DunnBros", "Shaw", "SpencerButte"),
-  long = c( -123.08612238375241, -93.1712321, -93.16713226722756, -93.17410997517122,-122.60714257487282, -93.16673880586066,  -123.09223887579367,  -93.16656060585638, -93.16914682302992, -93.16766192517365 , -123.10220770652353),
+  place = c("Home","Gram", "Wheeler", "Macalester College", "Fasika", 
+              "CheeseShop", "CafeYumm", "NeighborhoodCafe", "DunnBros", "Shaw", "SpencerButte"),
   
-  lat = c(44.00210149308963, 44.9378965, 44.95712687496842, 44.941519042078134, 45.36783657721001, 44.94084140978907, 44.04050721158651,44.9472694081176, 44.95410825065245, 44.938075291272426, 43.98085697776199
-          ), 
-  favorite = c("Y", "N", "N","Y","Y","N","N","N","N","N", "N")
+  long = c( -123.08612238375241,-122.60714257487282,-93.17410997517122, -93.1712321, -93.16713226722756, -93.16673880586066, -123.09223887579367,  -93.16656060585638, -93.16914682302992, -93.16766192517365 , -123.10220770652353),
+  
+  lat = c(44.00210149308963, 45.36783657721001, 44.941519042078134, 44.9378965, 44.95712687496842, 44.94084140978907, 44.04050721158651,44.9472694081176, 44.95410825065245, 44.938075291272426, 43.98085697776199), 
+  
+  favorite = c("Y", "Y", "Y","N","N","N","N","N","N","N","N")
   )
 ```
 
@@ -300,7 +300,7 @@ favorite_plc_kate <- tibble(
   * If there are other variables you want to add that could enhance your plot, do that now.  
  
 ```{r}
-pal <- colorFactor(palette = c("coral1", "cyan3"), levels = c("Y", "N"))
+pal <- colorFactor(palette = c("red", "cyan"), levels = c("Y", "N"))
 
 leaflet(data = favorite_plc_kate) %>% 
   addTiles() %>%
@@ -308,7 +308,8 @@ leaflet(data = favorite_plc_kate) %>%
                    color = ~ pal(favorite)) %>%
   addPolylines(lng = ~ long,
                lat = ~ lat, 
-               color = col2hex("seagreen3")) 
+               color = col2hex("seagreen3")) %>%
+  addLegend(position = "topright", colors = c("red", "cyan"), labels = ~c("Favorite Place", "Other Nice Places"))
 ```
 
  
@@ -385,7 +386,9 @@ ggmap(washdc) +
   labs(title= "Proportion of causal riders", x = "", y = "") 
 
 ```
-  
+
+I notice a pattern that there's a higher proportion of casual riders in the more downtown area of Washington DC.
+
 ### COVID-19 data
 
 The following exercises will use the COVID-19 data from the NYT.
@@ -415,7 +418,7 @@ covid19 %>%
   
 
 ```
-*** answer the question **
+I see that there are the most cases in California and Texas, and the initial problem was that the map was compressed and looked squished. I tried to fix that with fig.width. Also, on the legend, it is hard to visualise the actual number of people who had COVID. 
   
   12. Now add the population of each state to the dataset and color the states by most recent cumulative cases/10,000 people. See the code for doing this with the Starbucks data. You will need to make some modifications.
   
@@ -452,10 +455,7 @@ covid19 %>%
 ## Minneapolis police stops
 
 These exercises use the datasets `MplsStops` and `MplsDemo` from the `carData` library. Search for them in Help to find out more information.
-```{r}
-MplsStops
-MplsDemo
-```
+
 
 
   14. Use the `MplsStops` dataset to find out how many stops there were for each neighborhood and the proportion of stops that were for a suspicious vehicle or person. Sort the results from most to least number of stops. Save this as a dataset called `mpls_suspicious` and display the table.  
@@ -473,7 +473,8 @@ mpls_suspicious <- MplsStops %>%
   15. Use a `leaflet` map and the `MplsStops` dataset to display each of the stops on a map as a small point. Color the points differently depending on whether they were for suspicious vehicle/person or a traffic stop (the `problem` variable). HINTS: use `addCircleMarkers`, set `stroke = FAlSE`, use `colorFactor()` to create a palette.  
   
 ```{r}
-pal <- colorFactor(palette = c("coral1", "cyan3"), levels = c("suspicious", "traffic"))
+pal <- colorFactor(palette = c("coral1", "cyan3"), 
+                   levels = c("suspicious", "traffic"))
 
 leaflet(data = MplsStops) %>% 
   addTiles() %>%
@@ -507,23 +508,30 @@ leaflet(data = mpls_all) %>%
   addPolygons(label = ~ neighborhood, 
               color = ~ pal(propsus), 
               fillColor = ~ pal(propsus), 
-              fillOpacity = 0.8) 
+              fillOpacity = 0.8) %>%
+  addLegend(pal = pal, values = ~ propsus)
+  
 ```
 
   
   18. Use `leaflet` to create a map of your own choosing. Come up with a question you want to try to answer and use the map to help answer that question. Describe what your map shows. 
   
 ```{r}
-pal <- colorNumeric("inferno", domain = mpls_all$propsus)
+pal <- colorNumeric("inferno", domain = mpls_all$stops)
 
 
 leaflet(data = mpls_all) %>% 
-  addProviderTiles(providers$CartoDB.DarkMatter) %>%
+  addProviderTiles(providers$CartoDB.Voyager) %>%
   addPolygons(label = ~ neighborhood, 
-              color = ~ pal(propsus), 
-              fillColor = ~ pal(propsus), 
-              fillOpacity = 0.8) 
+              color = ~ pal(stops), 
+              fillColor = ~ pal(stops), 
+              fillOpacity = 0.8) %>% 
+  addLegend(pal = pal, values = ~ stops)
 ```
+
+
+
+This map shows the number of stops per neighboorhood. 
 
 ## GitHub link
 
