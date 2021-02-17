@@ -105,26 +105,39 @@ world <- get_stamenmap(
 # Plot the points on the map
 ggmap(world) + # creates the map "background"
   geom_point(data = Starbucks, 
-             aes(x = Longitude, y = Latitude, color = `Ownership Type`), 
+             aes(x = Longitude,
+                 y = Latitude,
+                 color = `Ownership Type`), 
              alpha = .3, 
              size = .1) +
-  theme_map()
+  theme_map() + 
+  labs(title = "Starbucks locations based on ownership type", 
+    x = "", 
+    y= ""
+  )
 ```
 
 
   2. Construct a new map of Starbucks locations in the Twin Cities metro area (approximately the 5 county metro area).
 
 ```{r}
-twincities <- get_stamenmap(bbox = c(left = -94, bottom = 44.52, right = -92.3, top = 45.5), 
-    maptype = "terrain",
-    zoom = 9)
+twincities <- get_stamenmap(bbox = c(left = -94, 
+                                     bottom = 44.52,
+                                     right = -92.3, 
+                                     top = 45.5), 
+                            maptype = "terrain",
+                            zoom = 9)
 
-ggmap(twincities) + # creates the map "background"
+ggmap(twincities) + 
   geom_point(data = Starbucks, 
              aes(x = Longitude, y = Latitude), 
              alpha = .3, 
              size = .1) +
-  theme_map()  
+  theme_map() + 
+  labs(title = "Location of Starbucks in the Twin Cities area", 
+       x = "" ,
+       y = ""
+  )
   
 ```
 
@@ -137,36 +150,58 @@ The zoom number adjusts how large the map image is, and a smaller number will in
   
 terrain-background, but I tried watercolor and it was aesthetically pleasing but hard to interpret.
 ```{r}
-twincities <- get_stamenmap(bbox = c(left = -94, bottom = 44.52, right = -92.3, top = 45.5), 
-    maptype = "watercolor",
-    zoom = 9)
+twincities <- get_stamenmap(bbox = c(left = -94,
+                                     bottom = 44.52,
+                                     right = -92.3, 
+                                     top = 45.5), 
+                            maptype = "watercolor",
+                            zoom = 9)
 
 ggmap(twincities) + # creates the map "background"
   geom_point(data = Starbucks, 
              aes(x = Longitude, y = Latitude), 
              alpha = .3, 
-             size = .1) +
-  theme_map() 
+             size = .6) +
+  theme_map() + 
+  labs(title = "Location of Starbucks in the Twin Cities", 
+       x = "", 
+       y = ""
+  )
 ```
 
 
   5. Add a point to the map that indicates Macalester College and label it appropriately. There are many ways you can do think, but I think it's easiest with the `annotate()` function (see `ggplot2` cheatsheet).
   
 ```{r}
-twincities <- get_stamenmap(bbox = c(left = -94, bottom = 44.52, right = -92.3, top = 45.5), 
-    maptype = "terrain",
-    zoom = 9)
+twincities <- get_stamenmap(bbox = c(left = -94,
+                                     bottom = 44.52,
+                                     right = -92.3,
+                                     top = 45.5), 
+                            maptype = "terrain", 
+                            zoom = 9)
 
 ggmap(twincities) + # creates the map "background"
   geom_point(data = Starbucks, 
              aes(x = Longitude, y = Latitude), 
              alpha = .3, 
-             size = .1) +
+             size = .6) +
   theme_map() + 
-  annotate(geom="text", x=-93.16916043326489, y= 44.93803060406433, label="Macalester College",
-              color="red", size = 2.5) +
-   annotate(geom="point", x=-93.16916043326489, y= 44.93803060406433,
-              color="coral1", size = 2.5)
+  labs(title = "Location of Starbucks and Macalester College in Twin Cities", 
+       x = "", 
+       y= ""
+  ) +
+  annotate(geom="point", 
+            x=-93.16916043326489,
+            y= 44.93803060406433,
+            color="lightgreen",
+            size = 2.5) + 
+  annotate(geom="text", 
+           x=-93.16916043326489,
+           y= 44.93803060406433,
+           label="Macalester College",
+           color="red", 
+           size = 2.5
+  )
   
 ```
 
@@ -198,7 +233,7 @@ and reading in the csv file from dropbox.
 
 153 - assigning the starbucks_us_by_state to a new variable named starbucks_with_2018_pop_est 
 154 - joins the dataset with the census_pop_est_2018 by joining the same rows "state_name" and "state"
-157 - mutate and create a new variable that calculated the amount of starbucks per 10,000people in a community. 
+157 - mutate and create a new variable that calculated the amount of starbucks per 10,000 people in a community. 
 
 
 
@@ -222,17 +257,21 @@ starbucks_with_2018_pop_est %>%
                fill = starbucks_per_10000)) +
   expand_limits(x = states_map$long, y = states_map$lat) +
   geom_point(data = StarbucksUS,
-             aes(x = Longitude, y = Latitude, color = "darkturquoise"), 
+             aes(x = Longitude, y = Latitude), 
              alpha = .3, 
-             size = .1) +
+             size = .1,
+             color = "darkturquoise") +
   theme_map() + 
-  labs(title = "Number of Starbucks per 10,000 people around the US", subtitle = "by Kate Seeger", x = "", y= "") + 
+  labs(title = "Number of Starbucks per 10,000 people around the US", 
+       subtitle = "by Kate Seeger",
+       x = "",
+       y= "") + 
   scale_fill_viridis_c(option  = "inferno") + 
   theme_map() + 
   theme(legend.background = element_blank())
 
 ```
-Based on this chloropleth map, I can tell that there is a higher amount of Starbucks per 10,000 people on the West Coast. This is most likely due to the fact that Starbucks originated in Seattle, WA.  
+Based on this chloropleth map, I can tell that there is a higher amount of Starbucks per 10,000 people on the West Coast. This is most likely due to the fact that Starbucks originated in Seattle, WA (woot woot west coast, best coast).  
 
 
 ### A few of your favorite things (`leaflet`)
