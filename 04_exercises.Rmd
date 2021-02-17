@@ -488,19 +488,43 @@ leaflet(data = MplsStops) %>%
 
 ```{r}
 mpls_nbhd <- st_read("Minneapolis_Neighborhoods/Minneapolis_Neighborhoods.shp", quiet = TRUE)
-```
 
-
-
-```{r}
-
+mpls_all <- mpls_nbhd %>%
+  mutate(neighborhood = BDNAME) %>%
+  left_join(mpls_suspicious, 
+            MplsDemo, 
+            by = c("neighborhood"))
 ```
 
   17. Use `leaflet` to create a map from the `mpls_all` data  that colors the neighborhoods by `prop_suspicious`. Display the neighborhood name as you scroll over it. Describe what you observe in the map.
   
+```{r}
+pal <- colorNumeric("inferno", domain = mpls_all$propsus)
+
+
+leaflet(data = mpls_all) %>% 
+  addProviderTiles(providers$CartoDB.DarkMatter) %>%
+  addPolygons(label = ~ neighborhood, 
+              color = ~ pal(propsus), 
+              fillColor = ~ pal(propsus), 
+              fillOpacity = 0.8) 
+```
+
+  
   18. Use `leaflet` to create a map of your own choosing. Come up with a question you want to try to answer and use the map to help answer that question. Describe what your map shows. 
   
-  
+```{r}
+pal <- colorNumeric("inferno", domain = mpls_all$propsus)
+
+
+leaflet(data = mpls_all) %>% 
+  addProviderTiles(providers$CartoDB.DarkMatter) %>%
+  addPolygons(label = ~ neighborhood, 
+              color = ~ pal(propsus), 
+              fillColor = ~ pal(propsus), 
+              fillOpacity = 0.8) 
+```
+
 ## GitHub link
 
   19. Below, provide a link to your GitHub page with this set of Weekly Exercises. Specifically, if the name of the file is 04_exercises.Rmd, provide a link to the 04_exercises.md file, which is the one that will be most readable on GitHub.
