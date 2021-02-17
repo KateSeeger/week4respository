@@ -1,6 +1,6 @@
 ---
 title: 'Weekly Exercises #4'
-author: "Kate"
+author: "Kate Seeger"
 output: 
   html_document:
     keep_md: TRUE
@@ -116,6 +116,12 @@ ggmap(world) + # creates the map "background"
     y= ""
   )
 ```
+
+
+
+
+
+
 I can tell that in the US the Starbucks are mainly owned by company or licensed.In Europe, Starbucks are a mix of company owned, joint venue, and licensed. However, in very specific parts of East Asia, they have distinct clustering of ownership types (i.e. in Japan they only have joint venue ownership).
 
   2. Construct a new map of Starbucks locations in the Twin Cities metro area (approximately the 5 county metro area).
@@ -227,12 +233,17 @@ starbucks_with_2018_pop_est <-
 
 148 - assigning to a new variable named census_pop_est_2018
 and reading in the csv file from dropbox.
+
 149 - separating the "State" column into two variables into "dot" and "state" column. 
+
 150 - removes the dot column 
+
 151 - mutates the state column to be all lower case
 
 153 - assigning the starbucks_us_by_state to a new variable named starbucks_with_2018_pop_est 
+
 154 - joins the dataset with the census_pop_est_2018 by joining the same rows "state_name" and "state"
+
 157 - mutate and create a new variable that calculated the amount of starbucks per 10,000 people in a community. 
 
 
@@ -271,6 +282,8 @@ starbucks_with_2018_pop_est %>%
   theme(legend.background = element_blank())
 
 ```
+
+
 Based on this chloropleth map, I can tell that there is a higher amount of Starbucks per 10,000 people on the West Coast. This is most likely due to the fact that Starbucks originated in Seattle, WA (woot woot west coast, best coast).  
 
 
@@ -387,6 +400,7 @@ ggmap(washdc) +
 
 ```
 
+
 I notice a pattern that there's a higher proportion of casual riders in the more downtown area of Washington DC.
 
 ### COVID-19 data
@@ -395,7 +409,7 @@ The following exercises will use the COVID-19 data from the NYT.
 
   11. Create a map that colors the states by the most recent cumulative number of COVID-19 cases (remember, these data report cumulative numbers so you don't need to compute that). Describe what you see. What is the problem with this map?
   
-```{r, fig.width = 9}
+```{r, fig.width = 8}
 
 states_map <- map_data("state")
 
@@ -418,7 +432,8 @@ covid19 %>%
   
 
 ```
-I see that there are the most cases in California and Texas, and the initial problem was that the map was compressed and looked squished. I tried to fix that with fig.width. Also, on the legend, it is hard to visualise the actual number of people who had COVID. 
+
+I see that there are the most cases in California and Texas, and the initial problem was that the map was compressed and looked squished. I tried to fix that with fig.width. Also, on the legend, it is hard to visualize the actual number of people who had COVID. 
   
   12. Now add the population of each state to the dataset and color the states by most recent cumulative cases/10,000 people. See the code for doing this with the Starbucks data. You will need to make some modifications.
   
@@ -466,6 +481,8 @@ mpls_suspicious <- MplsStops %>%
   summarize(propsus = mean(problem == "suspicious"),  
                            stops = n()) %>%
   arrange(desc(stops))
+
+mpls_suspicious
 ```
 
 
@@ -529,13 +546,11 @@ leaflet(data = mpls_all) %>%
   addLegend(pal = pal, values = ~ stops)
 ```
 
-
-
 This map shows the number of stops per neighboorhood. 
 
 ## GitHub link
 
   19. Below, provide a link to your GitHub page with this set of Weekly Exercises. Specifically, if the name of the file is 04_exercises.Rmd, provide a link to the 04_exercises.md file, which is the one that will be most readable on GitHub.
 
-
-**DID YOU REMEMBER TO UNCOMMENT THE OPTIONS AT THE TOP?**
+https://github.com/KateSeeger/week4respository
+https://github.com/KateSeeger/week4respository/blob/main/04_exercises.Rmd
